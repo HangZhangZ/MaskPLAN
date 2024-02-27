@@ -7,9 +7,15 @@ Layout design in floorplan traditionally involves a labor-intensive iterative pr
 ## Source Code and Data coming soon ...
 
 ### TODO
+
 MaskPLAN Base Framework
+
 MaskPLAN Ablations
+
 Data Preprocessing Package
+
 Preprocessed Dataset
+
 Pre-trained Model
+
 Inference GUI 
