@@ -1,6 +1,7 @@
 # MaskPLAN: Masked Generative Layout Planning from Partial Input
 
 Hang Zhang, Anton Savov, Benjamin Dillenburger
+
 Digital Building Technologies, ETH Zurich
 
 ## Accepted by CVPR 2024!
