@@ -27,3 +27,15 @@ Preprocessed Dataset
 Pre-trained Model
 
 Inference GUI 
+
+## Citation
+```
+@InProceedings{Zhang_2024_CVPR,
+    author    = {Zhang, Hang and Savov, Anton and Dillenburger, Benjamin},
+    title     = {MaskPLAN: Masked Generative Layout Planning from Partial Input},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2024},
+    pages     = {8964-8973}
+}
+```
