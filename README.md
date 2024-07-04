@@ -6,7 +6,7 @@ Digital Building Technologies, ETH Zurich
 
 ## Accepted by CVPR 2024!
 
-source link: https://github.com/HangZhangZ/MaskPLAN
+paper link: [https://github.com/HangZhangZ/MaskPLAN](https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_MaskPLAN_Masked_Generative_Layout_Planning_from_Partial_Input_CVPR_2024_paper.html)
 
 ## Abstract
  
