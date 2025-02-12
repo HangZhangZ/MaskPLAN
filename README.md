@@ -1,32 +1,31 @@
-# MaskPLAN: Masked Generative Layout Planning from Partial Input
+# MaskPLAN
+**[MaskPLAN: Masked Generative Layout Planning from Partial Input](https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_MaskPLAN_Masked_Generative_Layout_Planning_from_Partial_Input_CVPR_2024_paper.html)**
 
-Hang Zhang, Anton Savov, Benjamin Dillenburger
+*Hang Zhang, Anton Savov, Benjamin Dillenburger*
 
-Digital Building Technologies, ETH Zurich
+*Digital Building Technologies, ETH Zurich*
 
-## Accepted by CVPR 2024!
+<img src='figures/CVPR_fig1_final.png' width=70%>
 
-paper link: [https://github.com/HangZhangZ/MaskPLAN](https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_MaskPLAN_Masked_Generative_Layout_Planning_from_Partial_Input_CVPR_2024_paper.html)
+MaskPLAN allows users to influence layout generation with just the features they prioritize, using partial inputs in a Graph-structured Dynamic Masked Autoencoder (GDMAE), predicting layouts from incomplete design ideas.
 
-## Abstract
+[Paper Link](https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_MaskPLAN_Masked_Generative_Layout_Planning_from_Partial_Input_CVPR_2024_paper.html)
+
+[Video Link](https://www.youtube.com/watch?v=HuzoJdMWnRM&t=5s.html)
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/HuzoJdMWnRM&t=5s/0.jpg)](https://www.youtube.com/watch?v=HuzoJdMWnRM&t=5s)
+
+## Installation
  
-Layout planning spanning from architecture to interior design is a slow iterative exploration of ill-defined problems adopting a "I'll know it when I see it" approach to potential solutions. Recent advances in generative models promise to automate layout generation yet often overlook the crucial role of user-guided iteration cannot generate full solutions from incomplete design ideas and do not learn the inter-dependency of layout attributes. To address these limitations we propose MaskPLAN a novel generative model based on Graph-structured Dynamic Masked Autoencoders (GDMAE) featuring five transformers generating a blend of graph-based and image-based layout attributes. MaskPLAN lets users generate and adjust layouts with partial attribute definitions create alternatives for preferences and practice new composition-driven or functionality-driven workflows. Through cross-attribute learning and the user input as a global conditional prior we ensure that design synthesis is calibrated at every intermediate stage maintaining its feasibility and practicality. Extensive evaluations show MaskPLAN's superior performance over existing methods across multiple metrics.
+**1. install the requirements:**
+
+Please find the 
 
 ## Source Code and Data coming soon ... _in several weeks_
 
 ### TODO
 
-MaskPLAN Base Framework
 
-MaskPLAN Ablations
-
-Data Preprocessing Package
-
-Preprocessed Dataset
-
-Pre-trained Model
-
-Inference GUI 
 
 ## Citation
 ```
