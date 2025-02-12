@@ -1,4 +1,4 @@
-name: ppo
+name: MaskPLAN
 channels:
   - conda-forge
   - defaults
