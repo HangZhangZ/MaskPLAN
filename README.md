@@ -13,6 +13,7 @@ MaskPLAN allows users to influence layout generation with just the features they
 
 [Video Link](https://www.youtube.com/watch?v=HuzoJdMWnRM) -->
 
+**Video:**
 [![MaskPLAN Video](https://img.youtube.com/vi/HuzoJdMWnRM/hqdefault.jpg)](https://www.youtube.com/watch?v=HuzoJdMWnRM)
 
 ## Installation
