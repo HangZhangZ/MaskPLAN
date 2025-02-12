@@ -51,7 +51,7 @@ python Processed_data/FP_DataProcess_cross.py
 
 ## training
 
-We've offered our checkpoints in this [link] with four ablations (two model sizes with vector-only or vec-img hybrid data). If you would like to train the model, run the following code:
+We've offered our checkpoints in this [link](https://drive.google.com/drive/folders/1yvKe9l3l3zk7nM36LqgWmeeBIZTck0kp?usp=sharing) with four ablations (two model sizes with vector-only or vec-img hybrid data). If you would like to train the model, run the following code:
 
 ```
 # training small mdoel in vector-only format
