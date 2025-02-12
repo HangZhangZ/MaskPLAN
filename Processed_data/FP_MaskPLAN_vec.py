@@ -70,9 +70,9 @@ class FloorPlan_RPlan_Dataset():
         S_ou = np.concatenate((S_new[:,1:],np.zeros((num_layout*loops,1))),axis=-1).astype(np.int32)
         R_ou = np.concatenate((R_new[:,1:],np.ones((num_layout*loops,1,4))),axis=-2).astype(np.int32)
 
-        np.savez('Processed_data/RPLAN_input_vec.npz',T=T_new,L=L_new,A=A_new,S=S_new,R=R_new)
-        np.savez('Processed_data/RPLAN_output_vec.npz',T=T_ou,L=L_ou,A=A_ou,S=S_ou,R=R_ou)
-        np.savez('Processed_data/RPLAN_mask_vec.npz',T=T_mask,L=L_mask,A=A_mask,S=S_mask,R=R_mask)
+        np.savez_compressed('Processed_data/RPLAN_input_vec.npz',T=T_new,L=L_new,A=A_new,S=S_new,R=R_new)
+        np.savez_compressed('Processed_data/RPLAN_output_vec.npz',T=T_ou,L=L_ou,A=A_ou,S=S_ou,R=R_ou)
+        np.savez_compressed('Processed_data/RPLAN_mask_vec.npz',T=T_mask,L=L_mask,A=A_mask,S=S_mask,R=R_mask)
 
         
 
