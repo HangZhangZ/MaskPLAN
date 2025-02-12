@@ -5,7 +5,7 @@
 
 *Digital Building Technologies, ETH Zurich*
 
-<img src='figures/CVPR_fig1_final.png' width=70%>
+<img src='figures/CVPR_fig1_final.png' width=100%>
 
 MaskPLAN allows users to influence layout generation with just the features they prioritize, using partial inputs in a Graph-structured Dynamic Masked Autoencoder (GDMAE), predicting layouts from incomplete design ideas.
 
@@ -13,7 +13,7 @@ MaskPLAN allows users to influence layout generation with just the features they
 
 [Video Link](https://www.youtube.com/watch?v=HuzoJdMWnRM&t=5s)
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/HuzoJdMWnRM&t=5s/0.jpg)](https://www.youtube.com/watch?v=HuzoJdMWnRM&t=5s)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/HuzoJdMWnRM&t=5s/hqdefault.jpg)](https://www.youtube.com/watch?v=HuzoJdMWnRM&t=5s)
 
 ## Installation
  
