@@ -8,12 +8,12 @@
 <img src='figures/CVPR_fig1_final.png' width=80%>
 
 MaskPLAN allows users to influence layout generation with just the features they prioritize, using partial inputs in a Graph-structured Dynamic Masked Autoencoder (GDMAE), predicting layouts from incomplete design ideas.
-
+**Video:**
 <!-- [Paper Link](https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_MaskPLAN_Masked_Generative_Layout_Planning_from_Partial_Input_CVPR_2024_paper.html)
 
 [Video Link](https://www.youtube.com/watch?v=HuzoJdMWnRM) -->
 
-**Video:**
+
 [![MaskPLAN Video](https://img.youtube.com/vi/HuzoJdMWnRM/hqdefault.jpg)](https://www.youtube.com/watch?v=HuzoJdMWnRM)
 
 ## Installation
