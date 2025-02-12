@@ -35,7 +35,7 @@ System requirements:
 
 **2. prepare the dataset:**
 
-The original RPLAN dataset is from [RPLAN project page](http://staff.ustc.edu.cn/~fuxm/projects/DeepLayout/index.html). Our data preprocess inherited the implementation from [RPLAN-Toolbox](https://github.com/zzilch/RPLAN-Toolbox) and [Graph2Plan-DataPreparation](https://github.com/HanHan55/Graph2plan/tree/master/DataPreparation). We've offered the pre-processed data in folder `Processed_data`. If you would like to walk through our data processing, follow the steps as follows:
+The original RPLAN dataset is from [RPLAN project page](http://staff.ustc.edu.cn/~fuxm/projects/DeepLayout/index.html). Our data preprocess inherited the implementation from [RPLAN-Toolbox](https://github.com/zzilch/RPLAN-Toolbox) and [Graph2Plan-DataPreparation](https://github.com/HanHan55/Graph2plan/tree/master/DataPreparation). We've offered the pre-processed data in folder `Processed_data`. If you would like to walk through our data processing, follow the steps:
 
 - a. download the dataset from this [link](https://docs.google.com/forms/d/e/1FAIpQLSfwteilXzURRKDI5QopWCyOGkeb_CFFbRwtQ0SOPhEg0KGSfw/viewform), put in [your_downloaded_path]. run through the *RPLAN_DataProcess.ipynb* in folder `Processed_data`, where the dataset path should follow [your_downloaded_path].
 
