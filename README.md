@@ -73,7 +73,7 @@ python Train/MaskPLAN_Train_AllcrossDeep.py
 
 **1. fast test iteration:**
 
-We offer faset test with random sampled iterations.
+We offer fast test with random sampled iterations.
 
 ```
 # Inference small mdoel in vector-only format
