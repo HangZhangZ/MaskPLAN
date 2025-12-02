@@ -37,7 +37,7 @@ T_list = [[255,255,255,255],[255,255,0,255],[255,0,255,255],[0,255,255,255],
 frontD = np.load('Processed_data/RPLAN_frontdoor.npy') # vec
 bound = np.load('Processed_data/RPLAN_B.npy') # visual tokens
 Testset_ids = np.load('Processed_data/Test_set.npy') # ids
-bound_domain = np.load('Processed_data/Processed_data/Boundary_BoundingBox.npy') # vec
+bound_domain = np.load('Processed_data/Boundary_BoundingBox.npy') # vec
 
 ## args ##
 
@@ -104,7 +104,7 @@ def main(args):
 
     # VQ_encoder = load_model('VQ_Pretrained/mix_5564/vqvae_de/decoder.keras')
     VQ_decoder = load_model('VQ_Pretrained/mix_5564/vqvae_de/decoder.keras')
-    VQ_value = np.load('Processed_data/VQ_Pretrained/mix_5564/vqvae_q/quantizer.npy')
+    VQ_value = np.load('VQ_Pretrained/mix_5564/vqvae_q/quantizer.npy')
     quantizer = VectorQuantizer(code_dimen, code_dimen)
     quantizer.embeddings = tf.Variable(initial_value=VQ_value,trainable=False,name="embeddings_vqvae_R",)
 

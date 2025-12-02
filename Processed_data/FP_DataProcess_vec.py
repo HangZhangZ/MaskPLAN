@@ -1,5 +1,5 @@
 import numpy as np
-from FP_MaskPLAN_vec import *
+from Processed_data.FP_MaskPLAN_vec import *
 
 type_dim = 10
 loc_dim = 20
@@ -13,7 +13,7 @@ def main():
 
     NodeList = np.load('Processed_data/Nodes.npy',allow_pickle=True)
     NodeList[np.where(NodeList<0)] = 0
-    room_corner = np.load('Processed_data/Processed_data/Room_Sparse.npy')
+    room_corner = np.load('Processed_data/Room_Sparse.npy')
     pair = np.load('Processed_data/pair.npy',allow_pickle=True)
 
     DataSet = FloorPlan_RPlan_Dataset(type_dim, loc_dim, area_dim, room_dim, code)

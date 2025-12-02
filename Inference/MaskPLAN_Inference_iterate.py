@@ -37,7 +37,7 @@ T_list = [[255,255,255,255],[255,255,0,255],[255,0,255,255],[0,255,255,255],
 frontD = np.load('Processed_data/RPLAN_frontdoor.npy') # vec
 bound = np.load('Processed_data/RPLAN_B.npy') # visual tokens
 Testset_ids = np.load('Processed_data/Test_set.npy') # ids
-bound_domain = np.load('Processed_data/Processed_data/Boundary_BoundingBox.npy') # vec
+bound_domain = np.load('Processed_data/Boundary_BoundingBox.npy') # vec
 
 ## args ##
 
