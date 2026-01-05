@@ -90,6 +90,15 @@ python Inference/MaskPLAN_Inference_iterate_cross_Deep.py
 
 ```
 
+### Notes:
+
+(1) run the data processing pipeline to generate all required inputs. For convenience, we also upload the processed site-boundary image needed for inference. All the rest data have already been uploaded.
+
+(2) please Test on Windows using the provided environment. When you run inference via MaskPLAN_Inference_iterate_cross_Deep.py, you should see outputs for: the partial input image, results before post-processing, and results after post-processing.
+
+(3) For convenience, we also upload the inference results generated using the processed data, the provided checkpoint, and the same configuration.
+
+
 **2. UI interface:**
 
 real-time UI interface.
