@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 import json
 import cv2
 from Inference.decode_function import *
-from utils import mask_ada
+from utils import mask_ada, visualize_partial_input
 import argparse
 from shapely.geometry import Polygon,MultiPolygon,LinearRing,MultiPoint,LineString
 from shapely.ops import unary_union
@@ -62,6 +62,7 @@ def main(args):
     skip_idx = args.skip_idx
     os.makedirs('Inference/%s_Deep_vec/iteration/raw' % (args.model),exist_ok=True)
     os.makedirs('Inference/%s_Deep_vec/iteration/post' % (args.model),exist_ok=True)
+    os.makedirs('Inference/%s_Deep_vec/iteration/partial_input' % (args.model),exist_ok=True)
 
     ## define model
 
@@ -177,6 +178,9 @@ def main(args):
             partial_A = mask_ada(np.random.choice(valid, round(valid*args.par_A), replace=False),list_len,A_in[site_id])
             self.M_A[0] = partial_A
             self.In_A[0] = partial_A
+
+            path = 'Inference/%s_Deep_vec/iteration/partial_input/%d.jpg' % (args.model,site_id)
+            visualize_partial_input(partial_T,partial_L,partial_A,partial_S,partial_R,path)
 
         def inference_interation(self,site_id):
 
