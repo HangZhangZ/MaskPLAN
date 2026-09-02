@@ -28,6 +28,14 @@ conda env create -f MaskPLAN.yaml
 conda activate MaskPLAN
 ```
 
+The released environment was tested on Windows 10 with an NVIDIA RTX 4090. We
+recommend Windows for reproducing the released inference setup; Linux has not
+been validated and may encounter conda dependency-version mismatches. On
+Windows, a few pip dependencies may still need to be installed manually if
+conda does not resolve them on a particular machine. `MaskPLAN.yaml` does not
+contain a machine-specific conda `prefix`; remove or adjust that line if using
+an older copy of the file.
+
 System requirements:
 - a. GPU with at least 24GB Memory.
 - b. System RAM at least 32GB.
@@ -50,6 +58,11 @@ python Processed_data/FP_DataProcess_vec.py
 # data in vec-img hybrid format
 python Processed_data/FP_DataProcess_cross.py
 ```
+
+For inference, the boundary images produced by step (a) are required. As an
+alternative, extract `parsed_img/img_room_sqe/0.7z` so that files such as
+`parsed_img/img_room_sqe/0/<site_id>.png` exist. Steps (b) and (c) may be
+skipped when using the released pretrained and preprocessed artifacts.
 
 ## training
 
@@ -90,13 +103,32 @@ python Inference/MaskPLAN_Inference_iterate_cross_Deep.py
 
 ```
 
+These commands can be run from the repository root without setting
+`PYTHONPATH`. All four commands accept an optional `--seed`; omitting it keeps
+the original random behavior, while a value seeds both NumPy and TensorFlow:
+
+```
+python Inference/MaskPLAN_Inference_iterate_cross_Deep.py --seed 123
+```
+
+The partial-input configurations used in Table 1 are:
+
+- **Our I:** boundary B only (`--par_T 0 --par_L 0 --par_A 0 --par_S 0 --par_R 0`).
+- **Our II:** B plus independently sampled 25% T, C/L, A, S, and R input (the defaults).
+- **Our III:** B plus complete T, C/L, and A (`--par_T 1 --par_L 1 --par_A 1 --par_S 0 --par_R 0`).
+
+Partial-input ratios must be in `[0, 1]`. The old `all_variants.7z` run did not
+record its NumPy random state, so its exact conditioning masks cannot be
+reconstructed. The optional `--seed` makes future inference sampling
+repeatable, although exact model outputs may still vary across platforms.
+
 ### Notes:
 
-(1) run the data processing pipeline to generate all required inputs. For convenience, we also upload the processed site-boundary image needed for inference. All the rest data have already been uploaded.
+(1) run dataset preparation step (a), or extract the uploaded processed site-boundary image archive. All other required preprocessed data have already been uploaded.
 
-(2) please Test on Windows using the provided environment. When you run inference via MaskPLAN_Inference_iterate_cross_Deep.py, you should see outputs for: the partial input image, results before post-processing, and results after post-processing.
+(2) please test on Windows using the provided environment. Running `MaskPLAN_Inference_iterate_cross_Deep.py` produces the partial-input image, raw result, and the original post-processed result.
 
-(3) For convenience, we also upload the inference results generated from randoms 25 percent partial input, using the processed data, the provided checkpoint, and the same configuration.
+(3) For convenience, we also upload inference results generated with random 25% partial input. Because the original random state was not retained, these archived images are examples rather than exactly reproducible seeded outputs.
 
 
 **2. UI interface:**

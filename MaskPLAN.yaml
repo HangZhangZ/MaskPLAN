@@ -230,5 +230,3 @@ dependencies:
     - torch==2.1.2
     - tqdm==4.66.1
     - wandb==0.15.0
-prefix: C:\Users\HangTi\AppData\Local\Continuum\anaconda3\envs\ppo
-

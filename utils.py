@@ -1,16 +1,22 @@
 import numpy as np
-from tensorflow import keras
-import tensorflow as tf
 import cv2
 
 def visualize_partial_input(T,L,A,S,R,path):
 
-    canvas = cv2.imread('Partial_Input_Canvas.jpg')[:,:,0]
+    canvas = np.full((80, 130), 255, dtype=np.uint8)
+    for coordinate in range(0, 81, 10):
+        cv2.line(canvas, (0, min(coordinate, 79)), (129, min(coordinate, 79)), 220, 1)
+    for coordinate in list(range(0, 41, 10)) + list(range(50, 131, 10)):
+        cv2.line(canvas, (min(coordinate, 129), 0), (min(coordinate, 129), 79), 220, 1)
 
-    for t in T: canvas[t*10:t*10+10,0:10] = 0
-    for l in L: canvas[l*10:l*10+10,10:20] = 0
-    for s in S: canvas[s*10:s*10+10,20:30] = 0
-    for r in R: canvas[r*10:r*10+10,30:40] = 0
+    for t in T:
+        if 1 <= int(t) <= 8: canvas[(int(t)-1)*10:int(t)*10,0:10] = 0
+    for l in L:
+        if 1 <= int(l) <= 8: canvas[(int(l)-1)*10:int(l)*10,10:20] = 0
+    for s in S:
+        if 1 <= int(s) <= 8: canvas[(int(s)-1)*10:int(s)*10,20:30] = 0
+    for r in R:
+        if 1 <= int(r) <= 8: canvas[(int(r)-1)*10:int(r)*10,30:40] = 0
 
     for a1 in range(8):
         for a2 in range(a1,8):
@@ -18,7 +24,9 @@ def visualize_partial_input(T,L,A,S,R,path):
                 canvas[a2*10:a2*10+10,a1*10+50:a1*10+60] = 0
                 canvas[a1*10:a1*10+10,a2*10+50:a2*10+60] = 0
 
-    cv2.imwrite(path,canvas)
+    if not cv2.imwrite(str(path),canvas):
+        raise OSError("failed to write partial-input visualization to %s" % path)
+    return canvas
 
 def check_room_shape(pts):
     if (pts[2,0]-pts[0,0])*(pts[2,1]-pts[0,1]) < 25:
@@ -34,6 +42,8 @@ def check_room_shape(pts):
         pts[0,0] -= 10
         pts[3,0] -= 10
         pts[1:3,0] += 10
+
+    return pts
 
 def randint_diff(valid): 
 
@@ -172,4 +182,3 @@ def make_onehot_nor(size,dimension):
 
 def randint_size_n(n, N=8): 
     return np.random.choice(N, n, replace=False)
-

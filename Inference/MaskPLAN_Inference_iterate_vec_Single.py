@@ -1,4 +1,11 @@
 import os
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 import tensorflow as tf
 tf.compat.v1.enable_eager_execution()
 import numpy as np
@@ -6,6 +13,13 @@ from tensorflow.keras.models import load_model
 import json
 import cv2
 from Inference.decode_function import *
+from Inference.inference_utils import (
+    largest_polygon,
+    load_boundary_points,
+    partial_ratio,
+    sample_partial_indices,
+    set_random_seed,
+)
 from utils import mask_ada, visualize_partial_input
 import argparse
 from shapely.geometry import Polygon,MultiPolygon,LinearRing,MultiPoint,LineString
@@ -32,10 +46,10 @@ T_list = [[255,255,255,255],[255,255,0,255],[255,0,255,255],[0,255,255,255],
 
 ## Load Data ##
 
-frontD = np.load('Processed_data/RPLAN_frontdoor.npy') # vec
-bound = np.load('Processed_data/RPLAN_B.npy') # visual tokens
-Testset_ids = np.load('Processed_data/Test_set.npy') # ids
-bound_domain = np.load('Processed_data/Boundary_BoundingBox.npy') # vec
+frontD = np.load(REPO_ROOT / 'Processed_data/RPLAN_frontdoor.npy') # vec
+bound = np.load(REPO_ROOT / 'Processed_data/RPLAN_B.npy') # visual tokens
+Testset_ids = np.load(REPO_ROOT / 'Processed_data/Test_set.npy') # ids
+bound_domain = np.load(REPO_ROOT / 'Processed_data/Boundary_BoundingBox.npy') # vec
 
 ## args ##
 
@@ -45,14 +59,16 @@ def parse_args():
     
     parser.add_argument('--model', default='Large', type=str, help='Tiny, Base, Large')
     parser.add_argument('--test_cases', default=1000, type=int) # test layouts
-    parser.add_argument('--par_T', default=0.25, type=float) # partial input Type
-    parser.add_argument('--par_L', default=0.25, type=float) # partial input Location
-    parser.add_argument('--par_A', default=0.25, type=float) # partial input Adjacency 
-    parser.add_argument('--par_S', default=0.25, type=float) # partial input Size 
-    parser.add_argument('--par_R', default=0.25, type=float) # partial input Region 
+    parser.add_argument('--par_T', default=0.25, type=partial_ratio) # partial input Type
+    parser.add_argument('--par_L', default=0.25, type=partial_ratio) # partial input Location
+    parser.add_argument('--par_A', default=0.25, type=partial_ratio) # partial input Adjacency
+    parser.add_argument('--par_S', default=0.25, type=partial_ratio) # partial input Size
+    parser.add_argument('--par_R', default=0.25, type=partial_ratio) # partial input Region
+    parser.add_argument('--seed', default=None, type=int,
+                        help='optional NumPy/TensorFlow seed; default keeps random sampling')
     parser.add_argument('--skip_idx', default=1, type=int,
                         help='which token to skip, default skip first [start] token')
-    
+
     return parser.parse_args()
 
 ## main inference ##
@@ -60,9 +76,10 @@ def parse_args():
 def main(args):
 
     skip_idx = args.skip_idx
-    os.makedirs('Inference/%s_Single_vec/iteration/raw' % (args.model),exist_ok=True)
-    os.makedirs('Inference/%s_Single_vec/iteration/post' % (args.model),exist_ok=True)
-    os.makedirs('Inference/%s_Single_vec/iteration/partial_input' % (args.model),exist_ok=True)
+    set_random_seed(args.seed, tf)
+    output_root = REPO_ROOT / 'Inference' / ('%s_Single_vec' % args.model) / 'iteration'
+    for directory in ('raw', 'post', 'partial_input'):
+        (output_root / directory).mkdir(parents=True, exist_ok=True)
 
     ## define model
 
@@ -96,11 +113,11 @@ def main(args):
     # load MaskPLAN
 
     MaskPLAN = MASKPLAN(embed_dim,latent_dim,num_heads,enc_layers,dec_layers)
-    MaskPLAN.load_weights('MaskPLAN_Trained/All_%s_Single_vec/All' % (args.model))
+    MaskPLAN.load_weights(str(REPO_ROOT / ('MaskPLAN_Trained/All_%s_Single_vec/All' % args.model)))
 
     # load data
     
-    Input_data = np.load('Processed_data/RPLAN_input_vec.npz')
+    Input_data = np.load(REPO_ROOT / 'Processed_data/RPLAN_input_vec.npz')
     file_index = Input_data.files
 
     T_in = Input_data[file_index[0]]
@@ -159,19 +176,19 @@ def main(args):
 
             valid = (T_in[site_id]==type_dimen-2).argmax(axis=0)-1
 
-            partial_T = np.random.choice(valid-1, round(valid*args.par_T), replace=False) + 1
+            partial_T = sample_partial_indices(valid, args.par_T)
             self.M_T[0,partial_T] = T_in[site_id,partial_T]
             self.In_T[0,partial_T] = T_in[site_id,partial_T]
 
-            partial_L = np.random.choice(valid-1, round(valid*args.par_L), replace=False) + 1
+            partial_L = sample_partial_indices(valid, args.par_L)
             self.M_L[0,partial_L] = L_in[site_id,partial_L]
             self.In_L[0,partial_L] = L_in[site_id,partial_L]
 
-            partial_S = np.random.choice(valid-1, round(valid*args.par_S), replace=False) + 1
+            partial_S = sample_partial_indices(valid, args.par_S)
             self.M_S[0,partial_S] = S_in[site_id,partial_S]
             self.In_S[0,partial_S] = S_in[site_id,partial_S]
 
-            partial_R = np.random.choice(valid-1, round(valid*args.par_R), replace=False) + 1
+            partial_R = sample_partial_indices(valid, args.par_R)
             self.M_R[0,partial_R] = R_in[site_id,partial_R]
             self.In_R[0,partial_R] = R_in[site_id,partial_R]
 
@@ -179,7 +196,7 @@ def main(args):
             self.M_A[0] = partial_A
             self.In_A[0] = partial_A
 
-            path = 'Inference/%s_Single_vec/iteration/partial_input/%d.jpg' % (args.model,site_id)
+            path = output_root / 'partial_input' / ('%d.jpg' % site_id)
             visualize_partial_input(partial_T,partial_L,partial_A,partial_S,partial_R,path)
 
         def inference_interation(self,site_id):
@@ -190,11 +207,9 @@ def main(args):
             types = []
             unioned_rooms = None
 
-            boundary = cv2.imread('parsed_img/img_room_sqe/0/%d.png' % (site_id),cv2.IMREAD_UNCHANGED)[:,:,-1]
-            boundary[np.where(boundary>100)] = 255
-            boundary_pt = get_bound_pt(boundary)
-            if boundary_pt.ndim == 1:
-                boundary_pt = [[0,0],[0,127],[127,127],[127,0]]
+            boundary_pt = load_boundary_points(
+                REPO_ROOT / 'parsed_img/img_room_sqe/0' / ('%d.png' % site_id)
+            )
             boundary_line = LinearRing(boundary_pt)
             boundary_outside = Polygon([[0,0],[0,127],[127,127],[127,0]]).difference(Polygon(boundary_line))
 
@@ -207,6 +222,7 @@ def main(args):
         
             # Inference, skip all [start] token and defined token
         
+            num_room = list_len - 2
             for k in range(int(list_len*5-1)):
 
                 if 0<= k < list_len-1: # Type
@@ -261,6 +277,8 @@ def main(args):
         
             # post-process
 
+            living = Polygon([[0,0],[0,1],[1,0]]) # init living
+
             for m in room_order:
                 
                     if m in types:
@@ -293,22 +311,12 @@ def main(args):
                                         coords[t],coords[(t+1)%4] = pt1,pt2
                                     room = Polygon(coords).envelope.difference(unioned_rooms)
                                     room = room.difference(boundary_outside)
-                                    if room.geom_type == 'MultiPolygon':
-                                        room = room.geoms[find_max(room.geoms)]
-                                    if room.geom_type == 'GeometryCollection':
-                                        room = room.geoms[0]
+                                    room = largest_polygon(room)
+                                    if room is None:
+                                        continue
                                     if room.area > 0.1:
 
-                                        if len(unioned_lines) > 1:
-                                            geolis = []
-                                            for l in unioned_rooms.geoms:
-                                                geolis.append(l)
-                                            geolis.append(room)
-                                            unioned_rooms = unary_union(MultiPolygon(geolis))
-                                        else:
-                                            if unioned_rooms.geom_type == 'MultiPolygon':
-                                                unioned_rooms = unioned_rooms.geoms[0]
-                                            unioned_rooms = unary_union(MultiPolygon([room,unioned_rooms]))
+                                        unioned_rooms = unary_union([unioned_rooms, room])
                                         
                                         cv2.fillPoly(reconst_post, [np.array(room.exterior.coords[:-1])[:,np.newaxis,:].astype(np.int32)], T_list[int(types[n])])
                                         if int(types[n]) == 1: living = room
@@ -322,14 +330,15 @@ def main(args):
                                         coords[t],coords[(t+1)%4] = pt1,pt2
 
                                     unioned_rooms = Polygon(coords).envelope.difference(boundary_outside)
-                                    if unioned_rooms.geom_type == 'MultiPolygon':
-                                        unioned_rooms = unioned_rooms.geoms[find_max(unioned_rooms.geoms)]
+                                    unioned_rooms = largest_polygon(unioned_rooms)
+                                    if unioned_rooms is None:
+                                        continue
                                     coorners = np.array(unioned_rooms.exterior.coords[:-1])
                                     if coorners.ndim>1 and coorners.shape[0]>2:
                                         cv2.fillPoly(reconst_post, [coorners[:,np.newaxis,:].astype(np.int32)], T_list[int(types[n])])
             
             boundary_poly = Polygon(boundary_line)
-            rest = boundary_poly.difference(unioned_rooms)
+            rest = boundary_poly if unioned_rooms is None else boundary_poly.difference(unioned_rooms)
             if rest.geom_type == 'MultiPolygon':
                 for geo in rest.geoms:
                     if geo.area > 3:
@@ -342,8 +351,8 @@ def main(args):
                     if scaled.intersects(living): cv2.fillPoly(reconst_post, [np.array(rest.exterior.coords[:-1])[:,np.newaxis,:].astype(np.int32)], T_list[1])
                     else: cv2.fillPoly(reconst_post, [np.array(rest.exterior.coords[:-1])[:,np.newaxis,:].astype(np.int32)], T_list[7])
             
-            cv2.imwrite('Inference/%s_Single_vec/iteration/raw/%d.png' % (args.model,site_id),reconstructed)
-            cv2.imwrite('Inference/%s_Single_vec/iteration/post/%d.png' % (args.model,site_id),reconst_post)
+            cv2.imwrite(str(output_root / 'raw' / ('%d.png' % site_id)), reconstructed)
+            cv2.imwrite(str(output_root / 'post' / ('%d.png' % site_id)), reconst_post)
     
     return MaskPLAN_Inference()
 
@@ -360,4 +369,3 @@ if __name__ == "__main__":
         model.partial_input(site)
         model.inference_interation(site)
         if num % 100 == 0: print(num)
-    
